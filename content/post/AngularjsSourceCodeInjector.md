@@ -192,9 +192,9 @@ function通过toString可以将自己的定义完全转换成字符串，这样�
 Angular中需要对象协作来完成任务，这些对象是通过`injector service`初始化创建并协同工作的。
 injector创建了两种类型的对象，`services`和`specialized objects`。
 service是由编写该service的开发人员定义api的对象，
-Specialized objects是符合特定Angular框架api的对象，这些对象是controllers, directives, filters 或者 animations。
+Specialized objects是符合特定Angular框架api的对象，这些对象是`controllers`, `directives`, `filters` 或者 `animations`。
 injector需要知道如何创建这些对象，我们是通过注册一个recipe来使用injector创建对象的，目前有五种recipe类型。
-其中最重要的是Provider recipe，其他的Value, Factory, Service 和 Constant仅仅是provider的语法糖。
+其中最重要的是`Provider recipe`，其他的Value, Factory, Service 和 Constant仅仅是provider的语法糖。
 
 ## 简单认识一下这些recipe
 ---
@@ -278,8 +278,8 @@ Javascript开发者通常会使用现有的类型来进行面向对象编程，�
       }
 ```
 ### Provider recipe
-正如之前所提到过的，provider recipe是最核心的recipe，它能实现最全面的功能，但是对于大多数service来说功能上有点过了。
-provider recipe实现了一个$get方法，这个方法是一个工厂方法，正如我们在使用factory recipe时一样，而事实上，当我们在定义
+正如之前所提到过的，`provider recipe`是最核心的recipe，它能实现最全面的功能，但是对于大多数service来说功能上有点过了。
+`provider recipe`实现了一个$get方法，这个方法是一个工厂方法，正如我们在使用factory recipe时一样，而事实上，当我们在定义
 一个factory recipe的时候，一个拥有$get方法的空的provider类型被创建了。
 
 仅仅当你想要在应用程序启动之前进行配置并对应用程序提供api时，才应该使用provider recipe。
@@ -352,7 +352,7 @@ injector在创建这些对象（除了Controller）的时候，使用了Factory�
 
 ## 回到createInjector
 ---
-通过分析可以知道providerCache的结构
+通过分析可以知道`providerCache`的结构
 ```
     {
         $provide: {
@@ -370,7 +370,7 @@ injector在创建这些对象（除了Controller）的时候，使用了Factory�
     }
 
 ```
-createInjector最终返回了一个instanceInjector
+`createInjector`最终返回了一个`instanceInjector`
 ```
     providerInjector = (providerCache.$injector =
               createInternalInjector(providerCache, function(serviceName, caller) {
@@ -388,7 +388,7 @@ createInjector最终返回了一个instanceInjector
               }),
     instanceInjector = protoInstanceInjector;
 ```
-关于createInternalInjector的定义
+关于`createInternalInjector`的定义
 ```
     function createInternalInjector(cache, factory) {
         //省略函数定义
@@ -404,7 +404,7 @@ createInjector最终返回了一个instanceInjector
       }
     createInjector.$$annotate = annotate;
 ```
-传入的cache和factory主要用在了getService里
+传入的`cache`和`factory`主要用在了`getService`里
 ```
     function getService(serviceName, caller) {
       if (cache.hasOwnProperty(serviceName)) {
@@ -432,15 +432,15 @@ createInjector最终返回了一个instanceInjector
 ```
 从cache中获取service，并且检测依赖的回环和provider不存在的情况。
 
-从constant recipe可以知道，instanceCache里目前只缓存了constant。
-protoInstanceInjector在调用get时，先从instanceCache检测，不存在定义时
-通过providerInjector来从providerCache里拿相应的provider。
-在获取provider之后调用了invoke方法
+从`constant recipe`可以知道，`instanceCache`里目前只缓存了constant。
+`protoInstanceInjector`在调用get时，先从`instanceCache`检测，不存在定义时
+通过`providerInjector`来从`providerCache`里拿相应的`provider`。
+在获取provider之后调用了`invoke`方法
 ```
     return instanceInjector.invoke(
                     provider.$get, provider, undefined, serviceName);
 ```
-来看一下invoke的定义
+来看一下`invoke`的定义
 ```
     function injectionArgs(fn, locals, serviceName) {
       var args = [],
@@ -482,10 +482,10 @@ protoInstanceInjector在调用get时，先从instanceCache检测，不存在定�
       }
     }
 ```
-所以可以看出，invoke将会得到一个切实可用的service，并在获取的过程中进行了缓存以及将所有的需求的依赖进行注入。
+所以可以看出，`invoke`将会得到一个切实可用的`service`，并在获取的过程中进行了缓存以及将所有的需求的依赖进行注入。
 
-整理一下流程就是，instanceInjector通过调用get，可以从instanceCache中获取已经初始化的service，如果instanceCache中没有，
-就从providerCache中获取其provider定义，然后初始化再缓存至instanceCache中，并返回初始化好的service。
+整理一下流程就是，`instanceInjector`通过调用get，可以从`instanceCache`中获取已经初始化的service，如果instanceCache中没有，
+就从`providerCache`中获取其provider定义，然后初始化再缓存至instanceCache中，并返回初始化好的service。
 
 ## 再回到createInjector
 ---
