@@ -4,7 +4,8 @@ date = "2016-12-15T10:18:34+08:00"
 title = "Angular1 Source Code Overview"
 tags = [
     "analyze",
-    'source code'
+    'source code',
+    'AngularJS'
 ]
 image = ""
 
